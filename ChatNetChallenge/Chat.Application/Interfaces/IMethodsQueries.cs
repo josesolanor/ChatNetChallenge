@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Chat.Application.Interfaces
 {
-    class IQueriesMessage
+    public interface IMethodsQueries<T>
     {
+        Task<List<T>> GetAll();
     }
 }
