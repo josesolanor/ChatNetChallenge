@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Chat.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Infrastructure.Data
 {
@@ -7,5 +8,7 @@ namespace Chat.Infrastructure.Data
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
         }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Message> Messages { get; set; }
     }
 }
