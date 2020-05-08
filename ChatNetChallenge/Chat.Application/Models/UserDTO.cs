@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Chat.Application.Models
 {
-    public class UserData
+    public class UserDTO
     {
     }
 }

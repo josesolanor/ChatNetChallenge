@@ -13,7 +13,6 @@ namespace Chat.Domain.Entities
             Messages = new HashSet<Message>();
         }
         public int Id { get; set; }        
-        public string Nickname { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
