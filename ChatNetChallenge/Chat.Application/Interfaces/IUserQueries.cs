@@ -7,7 +7,6 @@ namespace Chat.Application.Interfaces
 {
     public interface IUserQueries<T>
     {
-        Task<List<T>> GetAll();
         Task<T> GetByEmail(string email);
     }
 }

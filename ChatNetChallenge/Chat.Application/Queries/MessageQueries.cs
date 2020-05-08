@@ -14,11 +14,13 @@ namespace Chat.Application.Queries
     {
         private readonly ApplicationDBContext _context;
         private readonly IMapper _mapper;
+        private readonly IStockBotApi _stockBotApi;
 
-        public MessageQueries(ApplicationDBContext context, IMapper mapper)
+        public MessageQueries(ApplicationDBContext context, IMapper mapper, IStockBotApi stockBotApi)
         {
             _context = context;
             _mapper = mapper;
+            _stockBotApi = stockBotApi;
         }
 
         public async Task<List<MessageDTO>> GetAll()
@@ -26,6 +28,15 @@ namespace Chat.Application.Queries
             var listMessagesEntities = await _context.Messages.Include(x => x.User).OrderByDescending(m => m.Date).Take(50).ToListAsync();
             var result = _mapper.Map<List<MessageDTO>>(listMessagesEntities);
             return result;
+        }
+
+        public async Task<string> GetBotResponse(string text)
+        {            
+            var responseMessage = await _stockBotApi.SendCommandStockBot(text);
+            if (responseMessage.IsSuccessStatusCode)           
+               return responseMessage.Content.ReadAsStringAsync().Result;           
+            else            
+                return "StockBot not responding";            
         }
     }
 }

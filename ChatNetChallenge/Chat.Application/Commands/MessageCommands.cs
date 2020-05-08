@@ -32,5 +32,12 @@ namespace Chat.Application.Commands
         {
             await _context.SaveChangesAsync();
         }
+
+        public bool CheckBotCommand(string text)
+        {
+            if (text.Trim()[0] == '/')
+                return true;            
+            return false;
+        }
     }
 }

@@ -22,11 +22,6 @@ namespace Chat.Application.Queries
             _mapper = mapper;
         }
 
-        public Task<List<UserDTO>> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<UserDTO> GetByEmail(string email)
         {
             var userEntity = await _context.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));

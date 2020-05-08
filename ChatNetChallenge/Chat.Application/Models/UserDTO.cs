@@ -27,6 +27,5 @@ namespace Chat.Application.Models
                 return FullNameCommisioner;
             }
         }
-        //public ICollection<MessageDTO> Messages { get; set; }
     }
 }
