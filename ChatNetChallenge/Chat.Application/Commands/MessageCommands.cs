@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Chat.Application.Commands
 {
-    class MessageCommands : IMethodsCommands<Message>
+    class MessageCommands : IMessageCommands<Message>
     {
         private readonly ApplicationDBContext _context;
 

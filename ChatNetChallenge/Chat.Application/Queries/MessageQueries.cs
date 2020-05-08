@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Chat.Application.Queries
 {
-    class MessageQueries : IMethodsQueries<Message>
+    class MessageQueries : IMessageQueries<Message>
     {
         private readonly ApplicationDBContext _context;
 

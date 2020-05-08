@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Chat.Application.Models
 {
-    class MessageData
+    public class MessageData
     {
     }
 }

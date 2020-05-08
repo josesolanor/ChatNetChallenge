@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Chat.Application.Interfaces
 {
-    public interface IMethodsCommands<T>
+    public interface IMessageCommands<T>
     {
         Task InsertAsync(T model);
         Task Save();

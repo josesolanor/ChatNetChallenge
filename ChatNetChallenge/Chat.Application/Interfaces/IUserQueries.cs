@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Chat.Application.Models
+namespace Chat.Application.Interfaces
 {
-    public class UserData
+    class IUserQueries
     {
     }
 }
