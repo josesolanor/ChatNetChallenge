@@ -22,9 +22,9 @@ namespace Chat.Presentation.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult CheckCredentials(LoginDTO data)
+        public async Task<IActionResult> CheckCredentials(LoginDTO data)
         {
-            var result = _loginQueries.CheckCredencial(data);
+            var result = await _loginQueries.CheckCredencial(data);
             return Ok(result);
         }       
     }

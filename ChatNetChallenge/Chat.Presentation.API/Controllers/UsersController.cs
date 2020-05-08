@@ -29,10 +29,10 @@ namespace Chat.Presentation.API.Controllers
         }
        
         [HttpPost]
-        public IActionResult Post([FromBody] UserDTO data)
+        public async Task<IActionResult> Post([FromBody] UserDTO data)
         {
-            _userCommands.Insert(data);
-            _userCommands.Save();
+            await _userCommands.Insert(data);
+            await _userCommands.Save();
             return Ok();            
         }
     }

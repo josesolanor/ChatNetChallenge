@@ -42,6 +42,8 @@ namespace Chat.Presentation.API
 
             services.AddTransient<IUserCommands<UserDTO>, UserCommands>();
             services.AddTransient<IUserQueries<UserDTO>, UserQueries>();
+            services.AddTransient<IMessageCommands<MessageDTO>, MessageCommands>();
+            services.AddTransient<IMessageQueries<MessageDTO>, MessageQueries>();
             services.AddTransient<ILoginQueries<LoginDTO>, LoginQueries>();
         }
 
