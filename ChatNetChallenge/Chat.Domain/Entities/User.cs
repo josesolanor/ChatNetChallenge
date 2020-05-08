@@ -8,10 +8,6 @@ namespace Chat.Domain.Entities
 {
    public class User
    {
-        public User()
-        {
-            Messages = new HashSet<Message>();
-        }
         public int Id { get; set; }        
         [Required]
         public string FirstName { get; set; }
@@ -23,14 +19,7 @@ namespace Chat.Domain.Entities
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
-        public string FullName
-        {
-            get
-            {
-                string FullNameCommisioner = $"{FirstName} {LastName} {SecondLastName}";
-                return FullNameCommisioner;
-            }
-        }
+
         public ICollection<Message> Messages { get; set; }
     }
 }
