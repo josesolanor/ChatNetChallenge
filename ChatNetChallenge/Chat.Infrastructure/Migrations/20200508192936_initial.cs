@@ -33,23 +33,23 @@ namespace Chat.Infrastructure.Migrations
                     UserEmail = table.Column<string>(nullable: false),
                     TextMessage = table.Column<string>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    SenderId = table.Column<int>(nullable: true)
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_Users_SenderId",
-                        column: x => x.SenderId,
+                        name: "FK_Messages_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_SenderId",
+                name: "IX_Messages_UserId",
                 table: "Messages",
-                column: "SenderId");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

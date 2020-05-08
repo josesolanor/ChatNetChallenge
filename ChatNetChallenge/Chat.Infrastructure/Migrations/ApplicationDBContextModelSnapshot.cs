@@ -25,9 +25,6 @@ namespace Chat.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("SenderId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("TextMessage")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -36,9 +33,12 @@ namespace Chat.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
@@ -76,9 +76,11 @@ namespace Chat.Infrastructure.Migrations
 
             modelBuilder.Entity("Chat.Domain.Entities.Message", b =>
                 {
-                    b.HasOne("Chat.Domain.Entities.User", "Sender")
+                    b.HasOne("Chat.Domain.Entities.User", "User")
                         .WithMany("Messages")
-                        .HasForeignKey("SenderId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
