@@ -7,7 +7,7 @@ namespace Chat.Application.Interfaces
 {
     public interface IUserCommands<T>
     {
-        Task InsertAsync(T model);
+        Task Insert(T model);
         Task Save();
     }
 }

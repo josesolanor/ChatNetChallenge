@@ -2,6 +2,7 @@
 using Chat.Application.Models;
 using Chat.Domain.Entities;
 using Chat.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,9 +17,9 @@ namespace Chat.Application.Queries
         {
             _context = context;
         }
-        public bool CheckCredencial(LoginDTO model)
+        public async Task<bool> CheckCredencialAsync(LoginDTO model)
         {
-            var login = _context.Users.Where(m => m.Email.Equals(model.Email) && m.Password.Equals(model.Password)).FirstOrDefault();
+            var login = await _context.Users.Where(m => m.Email.Equals(model.Email) && m.Password.Equals(model.Password)).FirstOrDefaultAsync();
             return login is null;
         }
     }

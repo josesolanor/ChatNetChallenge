@@ -7,6 +7,6 @@ namespace Chat.Application.Interfaces
 {
     public interface ILoginQueries<T>
     {
-        bool CheckCredencial(T model);        
+        Task<bool> CheckCredencialAsync(T model);        
     }
 }

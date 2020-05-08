@@ -1,4 +1,5 @@
 ﻿using Chat.Application.Interfaces;
+using Chat.Application.Models;
 using Chat.Domain.Entities;
 using Chat.Infrastructure.Data;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Chat.Application.Queries
 {
-    class UserQueries : IUserQueries<User>
+    public class UserQueries : IUserQueries<UserDTO>
     {
         private readonly ApplicationDBContext _context;
 
@@ -17,12 +18,12 @@ namespace Chat.Application.Queries
             _context = context;
         }
 
-        public Task<List<User>> GetAll()
+        public Task<List<UserDTO>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> GetById(int id)
+        public Task<UserDTO> GetById(int id)
         {
             throw new NotImplementedException();
         }

@@ -1,30 +1,33 @@
-﻿using Chat.Application.Interfaces;
+﻿using AutoMapper;
+using Chat.Application.Interfaces;
+using Chat.Application.Models;
 using Chat.Domain.Entities;
 using Chat.Infrastructure.Data;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Chat.Application.Commands
 {
-    public class UserCommands : IUserCommands<User>
+    public class UserCommands : IUserCommands<UserDTO>
     {
         private readonly ApplicationDBContext _context;
+        private readonly IMapper _mapper;
 
-        public UserCommands(ApplicationDBContext context)
+        public UserCommands(ApplicationDBContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public Task InsertAsync(User model)
+        public async Task Insert(UserDTO model)
         {
-            throw new NotImplementedException();
+            var userEntity = _mapper.Map<User>(model);
+            await _context.Users.AddAsync(userEntity);
         }
 
-        public Task Save()
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
     }
 }
