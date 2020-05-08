@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Chat.Application.Interfaces
 {
-    class IUserCommands
+    public interface IUserCommands<T>
     {
+        Task InsertAsync(T model);
+        Task Save();
     }
 }
