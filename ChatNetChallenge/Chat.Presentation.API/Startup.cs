@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Chat.Application.Commands;
+using Chat.Application.Interfaces;
 using Chat.Application.Mapper;
+using Chat.Application.Models;
+using Chat.Application.Queries;
+using Chat.Domain.Entities;
+using Chat.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,15 +32,17 @@ namespace Chat.Presentation.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var mappingConfig = new MapperConfiguration(mc =>
+            services.AddInfrastructure(Configuration);
+            services.AddAutoMapper(configuration =>
             {
-                mc.AddProfile(new MappingProfile());                
-
-            });
-
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+                configuration.AddProfile(new MappingProfile());                                
+            }, typeof(Startup));
+            services.AddMvc();
             services.AddControllers();
+
+            services.AddTransient<IUserCommands<UserDTO>, UserCommands>();
+            services.AddTransient<IUserQueries<UserDTO>, UserQueries>();
+            services.AddTransient<ILoginQueries<LoginDTO>, LoginQueries>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

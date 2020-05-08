@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Application.Interfaces;
+using Chat.Application.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,36 +13,27 @@ namespace Chat.Presentation.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        // GET: api/Users
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IUserCommands<UserDTO> _userCommands;
+        private readonly IUserQueries<UserDTO> _userQueries;
+
+        public UsersController(IUserCommands<UserDTO> userCommands, IUserQueries<UserDTO> userQueries)
         {
-            return new string[] { "value1", "value2" };
+            _userCommands = userCommands;
+            _userQueries = userQueries;
         }
 
-        // GET: api/Users/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            return Ok();
         }
-
-        // POST: api/Users
+       
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] UserDTO data)
         {
-        }
-
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            _userCommands.Insert(data);
+            _userCommands.Save();
+            return Ok();            
         }
     }
 }
