@@ -15,10 +15,14 @@ namespace Chat.Presentation.API.Controllers
     {
         private readonly IMessageCommands<MessageDTO> _messageCommands;
         private readonly IMessageQueries<MessageDTO> _messageQueries;
-        public MessagesController(IMessageQueries<MessageDTO> messageQueries, IMessageCommands<MessageDTO> messageCommands)
+        private readonly IUserQueries<UserDTO> _userQueries;
+        public MessagesController(IMessageQueries<MessageDTO> messageQueries,
+            IMessageCommands<MessageDTO> messageCommands,
+            IUserQueries<UserDTO> userQueries)
         {
             _messageCommands = messageCommands;
             _messageQueries = messageQueries;
+            _userQueries = userQueries;
         }
 
         [HttpGet]
@@ -31,6 +35,11 @@ namespace Chat.Presentation.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MessageDTO data)
         {
+            var userDTO = await _userQueries.GetByEmail(data.UserEmail);
+            if (userDTO is null)
+                return NotFound();
+            data.UserId = userDTO.Id;
+            data.Date = DateTime.Now;
             await _messageCommands.Insert(data);
             await _messageCommands.Save();
             return Ok();

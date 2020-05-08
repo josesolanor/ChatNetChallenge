@@ -37,7 +37,7 @@ namespace Chat.Presentation.API
             {
                 configuration.AddProfile(new MappingProfile());                                
             }, typeof(Startup));
-            services.AddMvc();
+            services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddControllers();
 
             services.AddTransient<IUserCommands<UserDTO>, UserCommands>();

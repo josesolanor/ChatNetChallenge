@@ -21,13 +21,7 @@ namespace Chat.Presentation.API.Controllers
             _userCommands = userCommands;
             _userQueries = userQueries;
         }
-
-        [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int id)
-        {
-            return Ok();
-        }
-       
+     
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserDTO data)
         {
