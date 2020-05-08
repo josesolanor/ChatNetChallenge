@@ -7,6 +7,7 @@ namespace Chat.Application.Models
 {
     public class UserDTO
     {
+        public int Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
@@ -18,7 +19,14 @@ namespace Chat.Application.Models
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
-
-        public ICollection<MessageDTO> Messages { get; set; }
+        public string FullName
+        {
+            get
+            {
+                string FullNameCommisioner = $"{FirstName} {LastName} {SecondLastName}";
+                return FullNameCommisioner;
+            }
+        }
+        //public ICollection<MessageDTO> Messages { get; set; }
     }
 }
