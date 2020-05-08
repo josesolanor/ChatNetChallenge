@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chat.Application.Interfaces;
 using Chat.Application.Models;
+using Chat.Presentation.API.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,20 @@ namespace Chat.Presentation.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MessageDTO data)
         {
+            var option = new MessageBotResponse
+            {
+                BotCommand = false               
+            };
+
+            if (_messageCommands.CheckBotCommand(data.TextMessage))
+            {
+                var botMessage = await _messageQueries.GetBotResponse(data.TextMessage);
+
+                option.BotCommand = true;
+                option.Message = botMessage;
+                return Ok(option);
+            }
+            
             var userDTO = await _userQueries.GetByEmail(data.UserEmail);
             if (userDTO is null)
                 return NotFound();
@@ -42,7 +57,8 @@ namespace Chat.Presentation.API.Controllers
             data.Date = DateTime.Now;
             await _messageCommands.Insert(data);
             await _messageCommands.Save();
-            return Ok();
+            return Ok(option);
         }
+        
     }
 }
