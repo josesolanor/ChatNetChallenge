@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Application.Interfaces;
 using Chat.Application.Models;
 using Chat.Domain.Entities;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +13,19 @@ namespace Chat.Presentation.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class LoginsController : ControllerBase
-    {
-        [HttpGet]
-        public bool CheckCredentials(LoginDTO data)
+    {       
+        private readonly ILoginQueries<LoginDTO> _loginQueries;
+
+        public LoginsController(ILoginQueries<LoginDTO> loginQueries)
         {
-            return true;
+            _loginQueries = loginQueries;            
+        }
+
+        [HttpGet]
+        public IActionResult CheckCredentials(LoginDTO data)
+        {
+            var result = _loginQueries.CheckCredencial(data);
+            return Ok(result);
         }       
     }
 }
