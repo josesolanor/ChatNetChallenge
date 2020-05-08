@@ -18,9 +18,9 @@ namespace Chat.Application.Queries
         {
             _context = context;
         }
-        public bool CheckCredencial(LoginDTO model)
+        public async Task<bool> CheckCredencial(LoginDTO model)
         {
-            var loginExist = _context.Users.Where(m => m.Email.Equals(model.Email) && m.Password.Equals(model.Password)).FirstOrDefault();
+            var loginExist = await _context.Users.Where(m => m.Email.Equals(model.Email) && m.Password.Equals(model.Password)).FirstOrDefaultAsync();
             return loginExist is null ? false : true;
                
         }

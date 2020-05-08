@@ -1,4 +1,6 @@
-﻿using Chat.Application.Interfaces;
+﻿using AutoMapper;
+using Chat.Application.Interfaces;
+using Chat.Application.Models;
 using Chat.Domain.Entities;
 using Chat.Infrastructure.Data;
 using System;
@@ -9,18 +11,21 @@ using System.Threading.Tasks;
 
 namespace Chat.Application.Commands
 {
-    class MessageCommands : IMessageCommands<Message>
+    public class MessageCommands : IMessageCommands<MessageDTO>
     {
         private readonly ApplicationDBContext _context;
+        private readonly IMapper _mapper;
 
-        public MessageCommands(ApplicationDBContext context)
+        public MessageCommands(ApplicationDBContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task InsertAsync(Message model)
+        public async Task Insert(MessageDTO model)
         {
-            await _context.Messages.AddAsync(model);
+            var messageEntity = _mapper.Map<Message>(model);
+            await _context.Messages.AddAsync(messageEntity);
         }
 
         public async Task Save()

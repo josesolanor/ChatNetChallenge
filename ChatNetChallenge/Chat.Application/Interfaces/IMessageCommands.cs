@@ -7,7 +7,7 @@ namespace Chat.Application.Interfaces
 {
     public interface IMessageCommands<T>
     {
-        Task InsertAsync(T model);
+        Task Insert(T model);
         Task Save();
     }
 }
