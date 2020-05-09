@@ -22,12 +22,5 @@ namespace Chat.Presentation.StockBot.Controllers
             var botResponse = await _logicMessage.CommandMessage(model.Message);
             return Ok(botResponse);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var result = "Testing API";
-            return Ok(result);
-        }
     }
 }
