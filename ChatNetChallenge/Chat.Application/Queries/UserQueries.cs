@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using Chat.Application.Interfaces;
 using Chat.Application.Models;
-using Chat.Domain.Entities;
 using Chat.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Chat.Application.Queries
