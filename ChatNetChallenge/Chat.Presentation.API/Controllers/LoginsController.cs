@@ -21,7 +21,7 @@ namespace Chat.Presentation.API.Controllers
             _loginQueries = loginQueries;            
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> CheckCredentials(LoginDTO data)
         {
             var result = await _loginQueries.CheckCredencial(data);
