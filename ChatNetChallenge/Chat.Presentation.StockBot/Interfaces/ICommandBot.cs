@@ -7,6 +7,6 @@ namespace Chat.Presentation.StockBot.Interfaces
 {
     public interface ICommandBot
     {
-        string CommandMessage(string data);
+        Task<string> CommandMessage(string data);
     }
 }
