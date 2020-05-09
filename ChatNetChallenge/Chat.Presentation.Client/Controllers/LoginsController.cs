@@ -1,93 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Chat.Presentation.Client.Core;
+using Chat.Presentation.Client.Interfaces;
+using Chat.Presentation.Client.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.Presentation.Client.Controllers
 {
     public class LoginsController : Controller
     {
-        // GET: Logins
+
+        private readonly ILoginServices _loginServices;
+        private readonly Hash _hash;
+        public LoginsController(Hash hash, ILoginServices loginServices)
+        {
+            _hash = hash;
+            _loginServices = loginServices;
+        }
+
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Logins/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Logins/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Logins/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(LoginViewModels model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                var loginModelInputData = new LoginInputDataModel
+                {
+                    Email = model.Input.Email,
+                    //Password = _hash.EncryptString(model.Input.Password)
+                    Password = model.Input.Password
+                };
 
-                return RedirectToAction(nameof(Index));
+                var login = await _loginServices.CheckCredencial(loginModelInputData);
+
+                if (!login)
+                {
+                    model.ErrorMessage = "Incorrect Credentials";
+                    return View(model);
+                }
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, model.Input.Email)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties();
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                return RedirectToAction("Index", "Messages");
             }
-            catch
-            {
-                return View();
-            }
+            model.ErrorMessage = "Error on startup";
+            return View(model);
         }
 
-        // GET: Logins/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Logins/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout()
         {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Logins/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Logins/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index", "Login");
         }
     }
 }
