@@ -2,6 +2,7 @@
 using Chat.Presentation.StockBot.Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -42,7 +43,7 @@ namespace Chat.Presentation.StockBot.Core.BotCommands
                 var CSVArrayData = CSVData.Split(',');
 
                 responseModel.Symbol = CSVArrayData[0];
-                responseModel.Close = double.Parse(CSVArrayData[6]);
+                responseModel.Close = !CSVArrayData[6].Contains("N/D") ? CSVArrayData[6]: default;
 
                 return responseModel;
             }

@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Presentation.StockBot.Core;
+using Chat.Presentation.StockBot.Core.BotCommands;
+using Chat.Presentation.StockBot.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +28,8 @@ namespace Chat.Presentation.StockBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddTransient<ILogicMessage, LogicMessage>();         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chat.Application.Models;
 using AutoMapper;
+using Newtonsoft.Json;
 
 namespace Chat.Application.Queries
 {
@@ -33,9 +34,13 @@ namespace Chat.Application.Queries
         public async Task<string> GetBotResponse(string text)
         {            
             var responseMessage = await _stockBotApi.SendCommandStockBot(text);
-            if (responseMessage.IsSuccessStatusCode)           
-               return responseMessage.Content.ReadAsStringAsync().Result;           
-            else            
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var result = responseMessage.Content.ReadAsStringAsync().Result;
+                var json = JsonConvert.DeserializeObject(result);
+                return json.ToString();
+            }
+            else
                 return "StockBot not responding";            
         }
     }

@@ -16,9 +16,17 @@ namespace Chat.Presentation.StockBot.Core
             botCommands.Add("/stock=", new StockCode());
         }
 
-        public string GetMessageByCode(string code, string data)
+        public async Task<string> GetMessageByCode(string code, string data)
         {
-            return botCommands[code].CommandMessage(data);
+            try
+            {
+                return await botCommands[code].CommandMessage(data);
+            }
+            catch
+            {
+                return $"The command does not exist: {code}";
+            }
+            
         }
     }
 }

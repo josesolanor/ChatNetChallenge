@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Chat.Presentation.StockBot.Interfaces
 {
     public interface ILogicMessage
-    {        
-        string CommandMessage(string text);
+    {
+        Task<string> CommandMessage(string text);
     }
 }

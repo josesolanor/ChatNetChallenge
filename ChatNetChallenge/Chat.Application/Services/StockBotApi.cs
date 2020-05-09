@@ -28,7 +28,7 @@ namespace Chat.Application.Services
 
                 var options = new
                 {
-                    message = text                   
+                    Message = text                   
                 };
 
                 var stringData = JsonConvert.SerializeObject(options);

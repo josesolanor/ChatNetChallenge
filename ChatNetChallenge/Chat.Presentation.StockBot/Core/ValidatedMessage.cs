@@ -9,6 +9,7 @@ namespace Chat.Presentation.StockBot.Core
 {
     public class LogicMessage : ILogicMessage
     {
+        private readonly CommandDiccionary _commandDiccionary = new CommandDiccionary();
 
         static bool CommandFormat(string text)
         {
@@ -21,13 +22,16 @@ namespace Chat.Presentation.StockBot.Core
             return false;
         }
 
-        public string CommandMessage(string text)
+        public async Task<string> CommandMessage(string text)
         {
             if (CommandFormat(text))
             {
-                return "yes";
+                var code = text.Split('=')[0];
+                var data = text.Split('=')[1];
+
+                return await _commandDiccionary.GetMessageByCode($"{code}=", data);
             }
-            return "no";
+            return $"incorrect command format: {text}";
         }
     }
 }

@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace Chat.Presentation.StockBot.Model
 {
-    public class StockModel
+    public class BotCommandInputModel
     {
-            public string Symbol { get; set; }
-            public string Close { get; set; }
-      
+        public string Message { get; set; }
     }
 }

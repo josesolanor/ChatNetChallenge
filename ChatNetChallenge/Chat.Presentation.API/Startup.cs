@@ -8,6 +8,7 @@ using Chat.Application.Interfaces;
 using Chat.Application.Mapper;
 using Chat.Application.Models;
 using Chat.Application.Queries;
+using Chat.Application.Services;
 using Chat.Domain.Entities;
 using Chat.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -45,6 +46,7 @@ namespace Chat.Presentation.API
             services.AddTransient<IMessageCommands<MessageDTO>, MessageCommands>();
             services.AddTransient<IMessageQueries<MessageDTO>, MessageQueries>();
             services.AddTransient<ILoginQueries<LoginDTO>, LoginQueries>();
+            services.AddTransient<IStockBotApi, StockBotApi>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
