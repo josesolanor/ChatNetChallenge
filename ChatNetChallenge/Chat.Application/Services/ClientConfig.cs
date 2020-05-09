@@ -10,13 +10,13 @@ namespace Chat.Application.Services
     {
         public HttpClient Initial()
         {
-            var Host = Environment.GetEnvironmentVariable("SERVICE");
-            var Port = Environment.GetEnvironmentVariable("SERVICE_PORT");
+            var Host = Environment.GetEnvironmentVariable("SERVICE_BOT");
+            var Port = Environment.GetEnvironmentVariable("SERVICE_BOT_PORT");
             var Client = new HttpClient();
 
             if (Host is null || Port is null)            
                 //Localhost address
-                Client.BaseAddress = new Uri("http://localhost:20002/");            
+                Client.BaseAddress = new Uri("http://localhost:64594");            
             else            
                 Client.BaseAddress = new Uri($"http://{Host}:{Port}/");
             

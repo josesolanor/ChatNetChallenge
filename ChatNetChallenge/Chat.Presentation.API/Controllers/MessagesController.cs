@@ -44,7 +44,6 @@ namespace Chat.Presentation.API.Controllers
             if (_messageCommands.CheckBotCommand(data.TextMessage))
             {
                 var botMessage = await _messageQueries.GetBotResponse(data.TextMessage);
-
                 option.BotCommand = true;
                 option.Message = botMessage;
                 return Ok(option);
