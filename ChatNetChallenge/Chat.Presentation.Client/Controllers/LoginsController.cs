@@ -45,11 +45,18 @@ namespace Chat.Presentation.Client.Controllers
 
                 var login = await _loginServices.CheckCredencial(loginModelInputData);
 
-                if (!login)
+                if (!login.Status)
                 {
-                    model.ErrorMessage = "Incorrect Credentials";
+                    model.ErrorMessage = login.Error;
                     return View(model);
                 }
+
+                if (!login.APIResponse)
+                {
+                    model.ErrorMessage = "Incorrect credentials";
+                    return View(model);
+                }
+
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Email, model.Input.Email)

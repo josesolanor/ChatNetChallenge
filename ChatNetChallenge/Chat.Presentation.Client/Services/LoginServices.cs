@@ -20,18 +20,25 @@ namespace Chat.Presentation.Client.Services
         {
             _api = new ClientConfig();
         }
-        public async Task<bool> CheckCredencial(LoginInputDataModel model)
+        public async Task<LoginOutputDataModel> CheckCredencial(LoginInputDataModel model)
         {
+            var responseModel = new LoginOutputDataModel();
             var responseMessage = await SendCredencials(model);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var result = responseMessage.Content.ReadAsStringAsync().Result;
                 var json = JsonConvert.DeserializeObject(result);
-                return (bool)json;                               
+
+                responseModel.APIResponse = (bool)json;
+                responseModel.Status = true;
+                return responseModel;
             }
             else
-                return false;
-
+            {
+                responseModel.Status = false;
+                responseModel.Error = "Server not responding";
+                return responseModel;
+            }            
         }
 
         public async Task<HttpResponseMessage> SendCredencials(LoginInputDataModel model)

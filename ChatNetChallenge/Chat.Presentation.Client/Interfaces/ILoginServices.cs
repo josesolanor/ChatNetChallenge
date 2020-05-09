@@ -8,6 +8,6 @@ namespace Chat.Presentation.Client.Interfaces
 {
     public interface ILoginServices
     {
-        Task<bool> CheckCredencial(LoginInputDataModel model);
+        Task<LoginOutputDataModel> CheckCredencial(LoginInputDataModel model);
     }
 }
