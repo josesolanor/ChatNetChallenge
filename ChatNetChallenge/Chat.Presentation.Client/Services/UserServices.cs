@@ -1,6 +1,5 @@
 ﻿using Chat.Presentation.Client.Interfaces;
 using Chat.Presentation.Client.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,24 +11,21 @@ using System.Threading.Tasks;
 
 namespace Chat.Presentation.Client.Services
 {
-    public class LoginServices : ILoginServices
+    public class UserServices : IUserServices
     {
         private readonly ClientConfig _api;
 
-        public LoginServices()
+        public UserServices()
         {
             _api = new ClientConfig();
         }
-        public async Task<LoginOutputDataModel> CheckCredencial(LoginInputDataModel model)
+
+        public async Task<UserOutputDataModel> RegisterUser(UserInputDataModel model)
         {
-            var responseModel = new LoginOutputDataModel();
-            var responseMessage = await SendCredencials(model);
+            var responseModel = new UserOutputDataModel();
+            var responseMessage = await SendUserData(model);
             if (responseMessage.IsSuccessStatusCode)
             {
-                var result = responseMessage.Content.ReadAsStringAsync().Result;
-                var json = JsonConvert.DeserializeObject(result);
-
-                responseModel.APIResponse = (bool)json;
                 responseModel.Status = true;
                 return responseModel;
             }
@@ -38,24 +34,18 @@ namespace Chat.Presentation.Client.Services
                 responseModel.Status = false;
                 responseModel.Error = "Server not responding";
                 return responseModel;
-            }            
+            }
         }
 
-        private async Task<HttpResponseMessage> SendCredencials(LoginInputDataModel model)
+        private async Task<HttpResponseMessage> SendUserData(UserInputDataModel model)
         {
             HttpClient client = _api.Initial();
             HttpResponseMessage response = new HttpResponseMessage();
             try
             {
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, $"" + client.BaseAddress + "api/Logins");
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, $"" + client.BaseAddress + "api/Users");
 
-                var options = new
-                {
-                    Email = model.Email,
-                    Password = model.Password
-                };
-
-                var stringData = JsonConvert.SerializeObject(options);
+                var stringData = JsonConvert.SerializeObject(model);
                 var content = new StringContent(stringData, Encoding.UTF8, "application/json");
                 requestMessage.Content = new StringContent(stringData, Encoding.UTF8, "application/json");
                 response = await client.SendAsync(requestMessage);

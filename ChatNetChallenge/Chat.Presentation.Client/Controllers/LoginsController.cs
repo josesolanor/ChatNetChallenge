@@ -38,9 +38,8 @@ namespace Chat.Presentation.Client.Controllers
             {
                 var loginModelInputData = new LoginInputDataModel
                 {
-                    Email = model.Input.Email,
-                    //Password = _hash.EncryptString(model.Input.Password)
-                    Password = model.Input.Password
+                    Email = model.Input.Email,                    
+                    Password = _hash.EncryptString(model.Input.Password)
                 };
 
                 var login = await _loginServices.CheckCredencial(loginModelInputData);
@@ -68,7 +67,7 @@ namespace Chat.Presentation.Client.Controllers
 
                 return RedirectToAction("Index", "Messages");
             }
-            model.ErrorMessage = "Error on startup";
+            model.ErrorMessage = "Wrong Data";
             return View(model);
         }
 

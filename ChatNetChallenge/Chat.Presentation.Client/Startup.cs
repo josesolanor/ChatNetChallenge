@@ -30,6 +30,7 @@ namespace Chat.Presentation.Client
             services.AddControllersWithViews();
 
             services.AddTransient<ILoginServices, LoginServices>();
+            services.AddTransient<IUserServices, UserServices>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

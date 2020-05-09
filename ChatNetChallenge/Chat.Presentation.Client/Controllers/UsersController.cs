@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Presentation.Client.Core;
+using Chat.Presentation.Client.Interfaces;
+using Chat.Presentation.Client.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,85 +13,46 @@ namespace Chat.Presentation.Client.Controllers
 {
     public class UsersController : Controller
     {
-        // GET: Users
-        public ActionResult Index()
+        private readonly IUserServices _userServices;
+        private readonly Hash _hash;
+        public UsersController(Hash hash, IUserServices userServices)
         {
-            return View();
+            _hash = hash;
+            _userServices = userServices;
         }
 
-        // GET: Users/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Users/Create
+        [AllowAnonymous]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(UserViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                var userModelInputData = new UserInputDataModel
+                {
+                    FirstName = model.Input.FirstName,
+                    LastName = model.Input.LastName,
+                    SecondLastName = model.Input.SecondLastName,
+                    Email = model.Input.Email,
+                    Password = _hash.EncryptString(model.Input.Password)                    
+                };
 
-                return RedirectToAction(nameof(Index));
+                var registerUser = await _userServices.RegisterUser(userModelInputData);
+
+                if (!registerUser.Status)
+                {
+                    model.ErrorMessage = registerUser.Error;
+                    return View(model);
+                }
+
+                return RedirectToAction("Index", "Logins");
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Users/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Users/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Users/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            return View(model);            
+        }      
     }
 }
