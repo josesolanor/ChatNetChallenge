@@ -65,7 +65,7 @@ namespace Chat.Presentation.Client.Controllers
                 var authProperties = new AuthenticationProperties();
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-                return RedirectToAction("Index", "Messages");
+                return RedirectToAction("Create", "Messages");
             }
             model.ErrorMessage = "Wrong Data";
             return View(model);
