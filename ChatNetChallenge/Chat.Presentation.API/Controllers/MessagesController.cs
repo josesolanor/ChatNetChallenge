@@ -43,9 +43,19 @@ namespace Chat.Presentation.API.Controllers
 
             if (_messageCommands.CheckBotCommand(data.TextMessage))
             {
-                var botMessage = await _messageQueries.GetBotResponse(data.TextMessage);
+                var botMessage = await _messageQueries.GetBotResponse(data.TextMessage.ToLower());
                 option.BotCommand = true;
-                option.Message = botMessage;
+                option.Message = new MessageDTO 
+                {
+                    UserEmail = "Bot@Bot.com",
+                    TextMessage = botMessage,
+                    Date = DateTime.Now,
+                    User = new UserDTO 
+                    {
+                        FirstName = "Bot",
+                        Email = "Bot@Bot.com"
+                    }
+                };
                 return Ok(option);
             }
             
@@ -56,6 +66,8 @@ namespace Chat.Presentation.API.Controllers
             data.Date = DateTime.Now;
             await _messageCommands.Insert(data);
             await _messageCommands.Save();
+            data.User = userDTO;
+            option.Message = data;
             return Ok(option);
         }
         

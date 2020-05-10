@@ -43,12 +43,12 @@ namespace Chat.Presentation.Client.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var registerUser = await _messageServices.SendMessage(model);
 
                 if (!registerUser.Status)
                 {
-                    return View(model);
+                    //Colocar manera de saber si fue error
+                    return RedirectToAction("Create");
                 }
 
                 return Json(registerUser);

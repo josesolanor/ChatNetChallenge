@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Chat.Presentation.Client.Services
@@ -34,9 +35,19 @@ namespace Chat.Presentation.Client.Services
             }
         }
 
-        public Task<MessageOutputDataModel> SendMessage(MessageInputDataModel model)
+        public async Task<MessageOutputDataModel> SendMessage(MessageInputDataModel model)
         {
-            throw new NotImplementedException();
+            var responseData = await GetMessagesFromAPI();
+            if (responseData.IsSuccessStatusCode)
+            {
+                var responseContent = await responseData.Content.ReadAsStringAsync();
+                var messagesData = JsonConvert.DeserializeObject<MessageOutputDataModel>(responseContent);
+                return messagesData;
+            }
+            else
+            {
+                return new MessageOutputDataModel();
+            }
         }
 
         private async Task<HttpResponseMessage> GetMessagesFromAPI()
@@ -54,6 +65,28 @@ namespace Chat.Presentation.Client.Services
                     StatusCode = HttpStatusCode.InternalServerError
                 };
                 return message;
+            }
+
+        }
+        private async Task<HttpResponseMessage> SendMessageToAPI(MessageInputDataModel model)
+        {
+            HttpClient client = _api.Initial();
+            HttpResponseMessage response = new HttpResponseMessage();
+            try
+            {
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, $"" + client.BaseAddress + "api/Messages");
+
+                var stringData = JsonConvert.SerializeObject(model);
+                var content = new StringContent(stringData, Encoding.UTF8, "application/json");
+                requestMessage.Content = new StringContent(stringData, Encoding.UTF8, "application/json");
+                response = await client.SendAsync(requestMessage);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = HttpStatusCode.InternalServerError;
+                Console.WriteLine(ex);
+                return response;
             }
 
         }

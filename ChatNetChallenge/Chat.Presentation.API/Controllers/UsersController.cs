@@ -24,6 +24,6 @@ namespace Chat.Presentation.API.Controllers
             await _userCommands.Insert(data);
             await _userCommands.Save();
             return Ok();            
-        }
+        } 
     }
 }
