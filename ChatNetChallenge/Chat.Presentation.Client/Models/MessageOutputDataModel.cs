@@ -10,9 +10,18 @@ namespace Chat.Presentation.Client.Models
         public string UserEmail { get; set; }
         public string TextMessage { get; set; }
         public DateTime Date { get; set; }
+        
         public int UserId { get; set; }
         public UserMessageDataModel User { get; set; }
         public bool Status { get; set; }
+        public string DateOnText
+        {
+            get
+            {
+                string dateOnText = Date.ToString("dd/MM/yyyy HH:mm");
+                return dateOnText;
+            }
+        }
     }
 
     public class UserMessageDataModel

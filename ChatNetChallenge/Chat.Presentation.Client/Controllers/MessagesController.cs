@@ -27,8 +27,7 @@ namespace Chat.Presentation.Client.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllChatMessages()
         {
-            var messages = await _messageServices.GetAllMessages();
-
+            var messages = await _messageServices.GetAllMessages();         
             string JsonContext = JsonConvert.SerializeObject(messages, Formatting.Indented, new JsonSerializerSettings()
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore

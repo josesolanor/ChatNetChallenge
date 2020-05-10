@@ -26,7 +26,7 @@ namespace Chat.Application.Queries
 
         public async Task<List<MessageDTO>> GetAll()
         {
-            var listMessagesEntities = await _context.Messages.Include(x => x.User).OrderByDescending(m => m.Date).Take(50).ToListAsync();
+            var listMessagesEntities = await _context.Messages.Include(x => x.User).OrderBy(m => m.Date).Take(50).ToListAsync();
             var result = _mapper.Map<List<MessageDTO>>(listMessagesEntities);
             return result;
         }
