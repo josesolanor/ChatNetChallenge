@@ -24,7 +24,7 @@ namespace Chat.Presentation.API.Controllers
         {
             _messageCommands = messageCommands;
             _messageQueries = messageQueries;
-            _userQueries = userQueries;
+            _userQueries = userQueries; 
         }
 
         [HttpGet]

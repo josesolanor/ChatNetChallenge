@@ -1,4 +1,5 @@
 ﻿using Chat.Domain.Entities;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Infrastructure.Data
@@ -10,5 +11,7 @@ namespace Chat.Infrastructure.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
+
+        
     }
 }
