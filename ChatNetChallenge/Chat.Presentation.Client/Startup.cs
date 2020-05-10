@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Chat.Presentation.Client.Core;
+using Chat.Presentation.Client.Hubs;
 using Chat.Presentation.Client.Interfaces;
 using Chat.Presentation.Client.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -31,6 +32,7 @@ namespace Chat.Presentation.Client
 
             services.AddTransient<ILoginServices, LoginServices>();
             services.AddTransient<IUserServices, UserServices>();
+            services.AddTransient<IMessageServices, MessageServices>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -58,6 +60,8 @@ namespace Chat.Presentation.Client
             });
 
             services.AddScoped<Hash>();
+            services.AddSignalR();
+            services.AddSingleton<ChatHub>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +76,10 @@ namespace Chat.Presentation.Client
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseAuthentication();
+            //app.UseSignalR(routes =>
+            //{
+            //    routes.MapHub<ChatHub>("/chatHub");
+            //});
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseRouting();
@@ -83,6 +91,8 @@ namespace Chat.Presentation.Client
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Logins}/{action=Index}/{id?}");
+
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }

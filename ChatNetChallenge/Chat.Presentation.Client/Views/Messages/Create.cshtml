@@ -1,0 +1,216 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .chat {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .chat li {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #B3A9A9;
+        }
+
+            .chat li.left .chat-body {
+                margin-left: 60px;
+            }
+
+            .chat li.right .chat-body {
+                margin-right: 60px;
+            }
+
+
+            .chat li .chat-body p {
+                margin: 0;
+                color: #777777;
+            }
+
+        .panel .slidedown .glyphicon, .chat .glyphicon {
+            margin-right: 5px;
+        }
+
+    .panel-body {
+        overflow-y: scroll;
+        height: 250px;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #555;
+    }
+</style>
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Chat</h4>
+        </div>
+        <div class="panel-body">
+            <ul class="chat" id="chatBody">
+                <li class="left clearfix">
+                </li>
+            </ul>
+        </div>
+        <input id="visitChatSeletedId" hidden value="0">
+        <div class="panel-footer">
+            <div class="input-group">
+                <input id="btn_input" type="text" class="form-control input-sm" placeholder="Write your message here..." />
+                <span class="input-group-btn">
+                    <button class="btn btn-warning btn-sm" id="btn_chat">
+                        Send
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    connection.on("Message", function () {
+        chatModalSignalr();
+    });
+
+    connection.start().catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    $(function () {
+        chatModal();
+    });
+
+    $("#btn_chat").click(function() {
+        var messsageText = $("#btn_input").val();
+        if (messsageText == "") {
+            alert("Error, El mensaje esta en blanco");
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("ChatMessages", "Visitregistrations")',
+                type: "POST",
+                data: {
+                    Message: messsageText
+                }
+            }).done(function (response) {
+                $("#btn_input").val("");
+                chatModalSignalr();
+            }).fail(function () {
+                alert("Mensaje no enviado, error en la solicitud");
+            });
+        }
+    });
+
+    function chatModal() {
+
+        $.ajax({
+            url: '@Url.Action("GetAllChatMessages", "Messages")',
+            type: "GET"
+        }).done(function (response) {
+            var dataMessages = JSON.parse(response);
+            cleanMessageBox();
+            createChatMessage(dataMessages);
+            makeScrollBottom();
+        });
+    };
+
+    function chatModalSignalr() {
+        var data = $("#visitChatSeletedId").val();
+
+        $.ajax({
+            url: '@Url.Action("ChatMessages", "Visitregistrations")',
+            type: "GET",
+            data: {visitId: data}
+        }).done(function (response) {
+            var dataMessages = JSON.parse(response);
+            cleanMessageBox();
+            createChatMessage(dataMessages);
+            makeScrollBottom();
+        });
+    }
+
+    function cleanMessageBox() {
+        var list = document.getElementById("chatBody");
+
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+    }
+    function createChatMessage(dataMessages) {
+
+        dataMessages.forEach(loadMessages);
+    }
+    function loadMessages(item, index)
+    {
+        var body = document.getElementById("chatBody");
+
+        var liMessage = document.createElement("li");
+        liMessage.classList.add("left");
+        liMessage.classList.add("clearfix");
+
+
+        var divGeneral = document.createElement("div");
+        divGeneral.classList.add("chat-body");
+        divGeneral.classList.add("clearfix");
+
+        var chatHeader = document.createElement("div");
+        chatHeader.classList.add("header");
+
+        var messageBody = document.createElement("p");
+        var textMessage = document.createTextNode(item["TextMessage"]);
+        messageBody.appendChild(textMessage);
+
+        var autorName = document.createElement("strong");
+        autorName.classList.add("primary-font");
+        var textAutor = document.createTextNode(item["User"]["FullName"]);
+        autorName.appendChild(textAutor);
+
+        var messageTime = document.createElement("small");
+        messageTime.classList.add("pull-right");
+        messageTime.classList.add("text-muted");
+        var textMessage = document.createTextNode(item["Date"]);
+        messageTime.appendChild(textMessage);
+
+        var logoTime = document.createElement("span");
+        logoTime.classList.add("glyphicon")
+        logoTime.classList.add("glyphicon-time")
+
+        messageTime.appendChild(logoTime)
+
+        chatHeader.appendChild(autorName)
+        chatHeader.appendChild(messageTime)
+
+        divGeneral.appendChild(chatHeader)
+        divGeneral.appendChild(messageBody)
+
+        liMessage.appendChild(divGeneral)
+
+        body.appendChild(liMessage)
+    }
+    function makeScrollBottom() {
+        $("div.panel-body").scrollTop($("div.panel-body").prop("scrollHeight"));
+    }
+
+    </script>
+}
+
+
+
+

@@ -2,92 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Presentation.Client.Interfaces;
+using Chat.Presentation.Client.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Chat.Presentation.Client.Controllers
 {
     public class MessagesController : Controller
     {
-        // GET: Messages
-        public ActionResult Index()
+        private readonly IMessageServices _messageServices;
+
+        public MessagesController(IMessageServices messageServices)
         {
-            return View();
+            _messageServices = messageServices;
         }
 
-        // GET: Messages/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Messages/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Messages/Create
+        [HttpGet]
+        public async Task<IActionResult> GetAllChatMessages()
+        {
+            var messages = await _messageServices.GetAllMessages();
+
+            string JsonContext = JsonConvert.SerializeObject(messages, Formatting.Indented, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+
+            return Json(JsonContext);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> SendMessage(MessageInputDataModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
 
-                return RedirectToAction(nameof(Index));
+                var registerUser = await _messageServices.SendMessage(model);
+
+                if (!registerUser.Status)
+                {
+                    return View(model);
+                }
+
+                return Json(registerUser);
             }
-            catch
-            {
-                return View();
-            }
+            return BadRequest();
         }
-
-        // GET: Messages/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Messages/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Messages/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Messages/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+      
     }
 }
