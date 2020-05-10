@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Chat.Presentation.Client.Hubs;
 using Chat.Presentation.Client.Interfaces;
 using Chat.Presentation.Client.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
 namespace Chat.Presentation.Client.Controllers
 {
+    [Authorize]
     public class MessagesController : Controller
     {
         private readonly IMessageServices _messageServices;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessagesController(IMessageServices messageServices)
+        public MessagesController(IMessageServices messageServices, IHubContext<ChatHub> hubContext)
         {
             _messageServices = messageServices;
+            _hubContext = hubContext;
         }
 
         public ActionResult Create()
@@ -52,7 +54,8 @@ namespace Chat.Presentation.Client.Controllers
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
 
-                return Json(JsonContext);
+                await _hubContext.Clients.All.SendAsync("Message", JsonContext);
+                return Ok();
             }
             return BadRequest();
         }

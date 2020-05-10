@@ -1,8 +1,8 @@
 ﻿
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-connection.on("Message", function () {
-    chatModalSignalr();
+connection.on("Message", function (data) {
+    chatModalSignalr(JSON.parse(data));
 });
 
 connection.start().catch(function (err) {
@@ -26,10 +26,8 @@ $("#btn_chat").click(function () {
                 TextMessage: messsageText,
                 UserEmail: emailUserFromIdentity
             }
-        }).done(function (response) {
+        }).done(function () {
             $("#btn_input").val("");
-            var dataMessages = JSON.parse(response);
-            chatModalSignalr(dataMessages);
         }).fail(function () {
             alert("Mensaje no enviado, error en la solicitud");
         });

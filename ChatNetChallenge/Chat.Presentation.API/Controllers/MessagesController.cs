@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Chat.Application.Interfaces;
 using Chat.Application.Models;
 using Chat.Presentation.API.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
