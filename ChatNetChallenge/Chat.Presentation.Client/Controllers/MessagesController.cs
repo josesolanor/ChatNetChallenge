@@ -38,20 +38,22 @@ namespace Chat.Presentation.Client.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendMessage(MessageInputDataModel model)
         {
             if (ModelState.IsValid)
             {
-                var registerUser = await _messageServices.SendMessage(model);
+                var messageSend = await _messageServices.SendMessage(model);
 
-                if (!registerUser.Status)
+                if (!messageSend.Status)
                 {
-                    //Colocar manera de saber si fue error
                     return RedirectToAction("Create");
                 }
+                string JsonContext = JsonConvert.SerializeObject(messageSend, Formatting.Indented, new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
 
-                return Json(registerUser);
+                return Json(JsonContext);
             }
             return BadRequest();
         }

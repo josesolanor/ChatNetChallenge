@@ -104,14 +104,16 @@
         }
         else {
             $.ajax({
-                url: '@Url.Action("ChatMessages", "Visitregistrations")',
+                url: '@Url.Action("SendMessage", "Messages")',
                 type: "POST",
                 data: {
-                    Message: messsageText
+                    TextMessage: messsageText,
+                    UserEmail: "jsolanor1994@gmail.com"
                 }
-            }).done(function (response) {
+            }).done(function (response) {                
                 $("#btn_input").val("");
-                chatModalSignalr();
+                var dataMessages = JSON.parse(response);
+                chatModalSignalr(dataMessages);
             }).fail(function () {
                 alert("Mensaje no enviado, error en la solicitud");
             });
@@ -131,19 +133,9 @@
         });
     };
 
-    function chatModalSignalr() {
-        var data = $("#visitChatSeletedId").val();
-
-        $.ajax({
-            url: '@Url.Action("ChatMessages", "Visitregistrations")',
-            type: "GET",
-            data: {visitId: data}
-        }).done(function (response) {
-            var dataMessages = JSON.parse(response);
-            cleanMessageBox();
-            createChatMessage(dataMessages);
-            makeScrollBottom();
-        });
+    function chatModalSignalr(data) {        
+        loadMessages(data);
+        makeScrollBottom();
     }
 
     function cleanMessageBox() {
@@ -154,7 +146,6 @@
         }
     }
     function createChatMessage(dataMessages) {
-
         dataMessages.forEach(loadMessages);
     }
     function loadMessages(item, index)
@@ -164,7 +155,6 @@
         var liMessage = document.createElement("li");
         liMessage.classList.add("left");
         liMessage.classList.add("clearfix");
-
 
         var divGeneral = document.createElement("div");
         divGeneral.classList.add("chat-body");

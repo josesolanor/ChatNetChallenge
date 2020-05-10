@@ -36,16 +36,16 @@ namespace Chat.Presentation.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MessageDTO data)
         {
-            var option = new MessageBotResponse
-            {
-                BotCommand = false               
-            };
+            //var option = new MessageBotResponse
+            //{
+            //    BotCommand = false               
+            //};
 
             if (_messageCommands.CheckBotCommand(data.TextMessage))
             {
                 var botMessage = await _messageQueries.GetBotResponse(data.TextMessage.ToLower());
-                option.BotCommand = true;
-                option.Message = new MessageDTO 
+                //option.BotCommand = true;
+               var option= new MessageDTO 
                 {
                     UserEmail = "Bot@Bot.com",
                     TextMessage = botMessage,
@@ -67,8 +67,8 @@ namespace Chat.Presentation.API.Controllers
             await _messageCommands.Insert(data);
             await _messageCommands.Save();
             data.User = userDTO;
-            option.Message = data;
-            return Ok(option);
+            //option.Message = data;
+            return Ok(data);
         }
         
     }

@@ -37,16 +37,17 @@ namespace Chat.Presentation.Client.Services
 
         public async Task<MessageOutputDataModel> SendMessage(MessageInputDataModel model)
         {
-            var responseData = await GetMessagesFromAPI();
+            var responseData = await SendMessageToAPI(model);
             if (responseData.IsSuccessStatusCode)
             {
                 var responseContent = await responseData.Content.ReadAsStringAsync();
                 var messagesData = JsonConvert.DeserializeObject<MessageOutputDataModel>(responseContent);
+                messagesData.Status = true;
                 return messagesData;
             }
             else
             {
-                return new MessageOutputDataModel();
+                return new MessageOutputDataModel { Status = false};
             }
         }
 
